@@ -45,9 +45,6 @@ export class ArtistsController {
     @Next() next: NextFunction,
   ) {
     try {
-      if (!artistDto.name) {
-        return res.send({message: 'Artist name required'});
-      }
       const artist = new this.artistModel({
         name: artistDto.name,
         image: file ? '/uploads/artists/' + file.filename : null,
