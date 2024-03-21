@@ -11,12 +11,12 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import mongoose, {Model} from 'mongoose';
-import {NextFunction, Response} from 'express';
-import {Album, AlbumDocument} from '../schemas/album.schema';
-import {FileInterceptor} from '@nestjs/platform-express';
-import {CreateAlbumDto} from './create-album.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import mongoose, { Model } from 'mongoose';
+import { NextFunction, Response } from 'express';
+import { Album, AlbumDocument } from '../schemas/album.schema';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateAlbumDto } from './create-album.dto';
 
 @Controller('albums')
 export class AlbumController {
@@ -59,7 +59,9 @@ export class AlbumController {
   }
 
   @Post()
-  @UseInterceptors(FileInterceptor('image', { dest: './public/uploads/albums' }))
+  @UseInterceptors(
+    FileInterceptor('image', { dest: './public/uploads/albums' }),
+  )
   async create(
     @UploadedFile() file: Express.Multer.File,
     @Body() albumDto: CreateAlbumDto,
