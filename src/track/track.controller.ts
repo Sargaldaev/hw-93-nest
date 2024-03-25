@@ -7,13 +7,15 @@ import {
   Param,
   Post,
   Query,
-  Res,
+  Res, UseGuards,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { NextFunction, Response } from 'express';
 import { Track, TrackDocument } from '../schemas/track.schema';
 import { CreateTrackDto } from './create-track.dto';
+import {TokenAuthGuard} from '../auth/token-auth.guard';
+import {PermitGuard} from '../auth/permit.guard';
 
 @Controller('tracks')
 export class TrackController {
@@ -52,7 +54,7 @@ export class TrackController {
       return res.status(500).send({ error: 'Internal Server Error' });
     }
   }
-
+  @UseGuards(TokenAuthGuard)
   @Post()
   async create(
     @Body() trackDto: CreateTrackDto,
@@ -75,7 +77,7 @@ export class TrackController {
       next(e);
     }
   }
-
+  @UseGuards(TokenAuthGuard, PermitGuard)
   @Delete(':id')
   async delete(@Param('id') id: string, @Res() res: Response) {
     if (!mongoose.Types.ObjectId.isValid(id)) {

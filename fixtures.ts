@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import * as crypto from 'crypto';
+import { UserSchema } from './src/schemas/user.schema';
 import { ArtistSchema } from './src/schemas/artist.schema';
 import { AlbumSchema } from './src/schemas/album.schema';
 import { TrackSchema } from './src/schemas/track.schema';
@@ -17,10 +18,27 @@ const run = async () => {
     console.log('Collections were not present, skipping drop...');
   }
 
+  const User = mongoose.model('User', UserSchema);
   const Artist = mongoose.model('Artist', ArtistSchema);
   const Album = mongoose.model('Album', AlbumSchema);
   const Track = mongoose.model('Track', TrackSchema);
 
+  await User.create(
+    {
+      username: 'User',
+      displayName: 'User',
+      password: '123',
+      role: 'user',
+      token: crypto.randomUUID(),
+    },
+    {
+      username: 'Admin',
+      displayName: 'Admin',
+      password: '153',
+      role: 'admin',
+      token: crypto.randomUUID(),
+    },
+  );
   const [Weeknd, FiftyСent, V_$_X_VPRiNCE] = await Artist.create(
     {
       name: 'The Weeknd',

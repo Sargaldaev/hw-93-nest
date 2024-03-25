@@ -7,7 +7,7 @@ import {
   Param,
   Post,
   Res,
-  UploadedFile,
+  UploadedFile, UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -16,6 +16,8 @@ import mongoose, { Model } from 'mongoose';
 import { CreateArtistDto } from './create-artist.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NextFunction, Response } from 'express';
+import {TokenAuthGuard} from '../auth/token-auth.guard';
+import {PermitGuard} from '../auth/permit.guard';
 
 @Controller('artists')
 export class ArtistsController {
@@ -45,7 +47,7 @@ export class ArtistsController {
       return res.status(500).send({ error: 'Internal Server Error' });
     }
   }
-
+  @UseGuards(TokenAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('image', { dest: './public/uploads/artists' }),
@@ -74,6 +76,7 @@ export class ArtistsController {
     }
   }
 
+  @UseGuards(TokenAuthGuard, PermitGuard)
   @Delete(':id')
   async delete(@Param('id') id: string, @Res() res: Response) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
